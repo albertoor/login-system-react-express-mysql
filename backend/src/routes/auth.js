@@ -10,6 +10,6 @@ router.post("/register", authController.registerHandle)
 router.post("/login", authController.loginHandle)
 
 // route to check if user is authenticated
-router.post("/isAuthenticated", authController.isAuthenticated)
+router.get("/isAuthenticated/:id_user", authController.isAuthenticated)
 
 module.exports = router

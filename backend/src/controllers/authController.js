@@ -60,7 +60,21 @@ exports.loginHandle = (req, res) => {
 }
 
 // IsAuthenticated
-exports.isAuthenticated = (req, res) => { }
+exports.isAuthenticated = (req, res) => {
+  const token = req.headers['x-access-token']
+  if (!token) res.status(401).json({ message: "You need a token" }).end()
+  else {
+    jwt.verify(token, process.env.DB_SECRET_JWT, (err, decoded) => {
+      console.log(decoded)
+      if (err) res.status(401).json({ auth: false, message: "You token has expired" })
+      else {
+        req.userId = decoded.id
+        res.status(200).json({ message: "Welcome" }).end()
+        next()
+      }
+    })
+  }
+}
 
 
 
