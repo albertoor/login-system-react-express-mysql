@@ -59,7 +59,8 @@ exports.loginHandle = (req, res) => {
   })
 }
 
-
+// IsAuthenticated
+exports.isAuthenticated = (req, res) => { }
 
 
 

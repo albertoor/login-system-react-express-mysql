@@ -9,5 +9,7 @@ router.post("/register", authController.registerHandle)
 // route to login into system
 router.post("/login", authController.loginHandle)
 
+// route to check if user is authenticated
+router.post("/isAuthenticated", authController.isAuthenticated)
 
 module.exports = router
