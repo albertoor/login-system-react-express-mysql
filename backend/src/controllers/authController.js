@@ -12,21 +12,26 @@ exports.registerHandle = (req, res) => {
   const { email, password, fullname } = req.body
   const { validPwd, rulesPwd } = validationHelpers.validatePassword(password)
   const validEmail = validationHelpers.validateEmail(email)
-  let errors = []
+  // let errors = []
+  let errors = {
+    fields: " ",
+    passErrors: [],
+    emailErrors: " "
+  }
 
-  if (!email && !fullname && !password) errors.push("Please fill fields")
+  if (!email && !fullname && !password) errors.fields = "Please fill fields"
 
   if (errors.length === 1) {
-    res.json({ success: false, message: errors.flat() })
+    res.json({ success: false, message: errors })
   } else {
-    if (validPwd === false) errors.push(rulesPwd.map((detail) => detail.message))
-    if (validEmail === false) errors.push("Email not valid example@gmail.com")
+    if (validPwd === false) errors.passErrors = rulesPwd.map((detail) => detail.message)
+    if (validEmail === false) errors.emailErrors = "Email not valid example@gmail.com"
     if (errors.length === 0) {
       db.query(queryToCheckEmail, [email], async (err, rows, fields) => {
         if (!err) {
-          if (rows.length > 0)
-            res.json({ success: false, message: ["Email number already exits"] })
-          else {
+          if (rows.length > 0) {
+            res.json({ success: false, emailUnique: ["Email already exits"] })
+          } else {
             let passwordHashed = await bcryptHelpers.encryptPassword(password)
             db.query(queryToInsertUser, [email, passwordHashed, fullname], (err, rows, fields) => {
               if (!err) res.status(200).json({ success: true, message: "Account created" })
@@ -35,7 +40,7 @@ exports.registerHandle = (req, res) => {
           }
         } else console.log(err)
       })
-    } else res.json({ success: false, message: errors.flat() })
+    } else res.json({ success: false, message: errors })
   }
 }
 
