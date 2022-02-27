@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Link, Flex,
   Box, Input,
@@ -9,15 +9,37 @@ import {
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import useShowPassword from '../hooks/useShowPassword'
 import useForm from '../hooks/useForm'
+import axios from 'axios'
+import { useCallback } from 'react'
+
 
 const Register = () => {
   const [isShowPasswordActive, onChangeIsShowPasswordActive] = useShowPassword()
   const [values, handleChange] = useForm()
+  const [errors, setErrors] = useState([])
+  const [successMsg, setSuccessMsg] = useState("")
 
-  const handleRegister = (e) => {
-    e.preventDefault()
-    console.log(values)
-  }
+  const handleRegister = useCallback(
+    (e) => {
+      e.preventDefault()
+      console.log(process.env.REACT_APP_REGISTER_URL)
+
+      axios.post(process.env.REACT_APP_REGISTER_URL, values)
+        .then((res) => {
+          console.log(res)
+          if (res.data.status === 400) {
+            setErrors(res.data.message)
+            console.log(res.data.message)
+          } else {
+            setErrors([])
+            setSuccessMsg(res.data.message)
+            console.log(res.data.message)
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
+    }, [values]
+  )
 
   return (
     <Flex minHeight='90vh' width='full' align='center' justifyContent='center'>
