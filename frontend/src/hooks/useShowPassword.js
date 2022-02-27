@@ -8,10 +8,10 @@ const useShowPassword = (initialState = false) => {
     setIsShowPasswordActive(!isShowPasswordActive)
   }
 
-  return {
+  return [
     isShowPasswordActive,
     onChangeIsShowPasswordActive
-  }
+  ]
 }
 
 export default useShowPassword
