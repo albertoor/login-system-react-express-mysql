@@ -7,8 +7,15 @@ import {
   InputGroup, InputRightAddon
 } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
+import { useState } from 'react'
 
 const Register = () => {
+  const [showHidePassword, setShowHidePassword] = useState(false)
+
+  const onShowHidePassword = () => {
+    setShowHidePassword(!showHidePassword)
+  }
+
   return (
     <Flex minHeight='90vh' width='full' align='center' justifyContent='center'>
       <Box
@@ -36,8 +43,13 @@ const Register = () => {
             <FormControl mt={4}>
               <FormLabel color="gray.600">Password</FormLabel>
               <InputGroup>
-                <Input type='password' placeholder='Enter your password' />
-                <InputRightAddon children={<ViewIcon />} cursor="pointer" />
+                <Input type={showHidePassword ? 'password' : 'text'} placeholder='Enter your password' />
+                <button type='button' onClick={onShowHidePassword}>
+                  <InputRightAddon
+                    children={showHidePassword ? <ViewIcon /> : <ViewOffIcon />}
+                    cursor="pointer"
+                  />
+                </button>
               </InputGroup>
             </FormControl>
             <Box pt={4}>
