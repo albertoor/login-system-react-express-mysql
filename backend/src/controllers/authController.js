@@ -14,6 +14,8 @@ exports.registerHandle = (req, res) => {
   const validEmail = validationHelpers.validateEmail(email)
   let errors = []
 
+  console.log(rulesPwd)
+
   if (!email && !fullname && !password) errors.push("Please fill fields")
 
   if (errors.length === 1) {

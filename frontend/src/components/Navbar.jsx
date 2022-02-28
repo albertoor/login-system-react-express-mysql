@@ -13,7 +13,7 @@ const Navbar = () => {
       </Box>
       <Spacer />
       <Box p='4'>
-        <Button colorScheme='teal' mr='4'>
+        <Button colorScheme='teal' mr='4' variant="outline">
           Sign Up
         </Button>
         <Button colorScheme='teal'>Log in</Button>
