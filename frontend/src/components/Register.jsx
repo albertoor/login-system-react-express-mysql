@@ -5,19 +5,23 @@ import {
   FormControl, FormLabel,
   Button, Heading,
   InputGroup, InputRightAddon,
+  Text
 } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import useShowPassword from '../hooks/useShowPassword'
 import useForm from '../hooks/useForm'
 import axios from 'axios'
 import Errors from './Errors'
-
+import { useNavigate } from 'react-router-dom'
+import AccountSuccess from './AccountSuccess'
 
 const Register = () => {
   const [isShowPasswordActive, onChangeIsShowPasswordActive] = useShowPassword()
   const [values, handleChange] = useForm()
   const [errors, setErrors] = useState([])
-  const [successMsg, setSuccessMsg] = useState("")
+  const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [success, setSuccess] = useState(false)
 
   const handleRegister = useCallback(
     (e) => {
@@ -29,12 +33,15 @@ const Register = () => {
             console.log(res.data)
           } else {
             setErrors([])
-            setSuccessMsg(res.data.message)
+            setIsSubmitting(!isSubmitting)
+            setTimeout(() => {
+              setSuccess(!success)
+            }, 2000)
           }
         }).catch((err) => {
           console.log(err)
         })
-    }, [values]
+    }, [values, isSubmitting, success]
   )
 
   console.log(errors)
@@ -47,56 +54,72 @@ const Register = () => {
         borderRadius={4} textAlign='center'
         boxShadow='lg'
       >
-        <Box textAlign='center' p={4}>
-          <Heading size="lg" color="gray.600">Register new account</Heading>
-        </Box>
-        <Box my={8} textAlign='left'>
-          <form onSubmit={(e) => handleRegister(e)}>
-            <FormControl>
-              <FormLabel color="gray.600">Fullname</FormLabel>
-              <Input
-                type='text'
-                placeholder='Enter your fullname'
-                name='fullname'
-                value={values.fullname || ""}
-                onChange={handleChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel color="gray.600">Email address</FormLabel>
-              <Input
-                type='email'
-                placeholder='Enter your email address'
-                name='email'
-                value={values.email || ""}
-                onChange={handleChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel color="gray.600">Password</FormLabel>
-              <InputGroup>
-                <Input
-                  type={isShowPasswordActive ? 'text' : 'password'}
-                  placeholder='Enter your password'
-                  name='password'
-                  value={values.password || ""}
-                  onChange={handleChange}
-                />
-                <button type='button' onClick={onChangeIsShowPasswordActive}>
-                  <InputRightAddon
-                    children={isShowPasswordActive ? <ViewIcon /> : <ViewOffIcon />}
-                    cursor="pointer"
-                  />
-                </button>
-              </InputGroup>
-            </FormControl>
-            {errors.length > 0 && <Errors errors={errors} />}
-            <Box pt={4}>
-              <Link color="teal.500">Forgot your password?</Link>
-            </Box>
-            <Button type='submit' backgroundColor="teal" color="white" width='full' mt={4}>Register</Button>
-          </form>
-        </Box>
+        {success ? <AccountSuccess /> :
+          (
+            <>
+              <Box textAlign='center' p={4}>
+                <Heading size="lg" color="gray.600">Register new account</Heading>
+              </Box>
+              <Box my={8} textAlign='left'>
+                <form onSubmit={(e) => handleRegister(e)}>
+                  <FormControl>
+                    <FormLabel color="gray.600">Fullname</FormLabel>
+                    <Input
+                      type='text'
+                      placeholder='Enter your fullname'
+                      name='fullname'
+                      value={values.fullname || ""}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                  <FormControl mt={4}>
+                    <FormLabel color="gray.600">Email address</FormLabel>
+                    <Input
+                      type='email'
+                      placeholder='Enter your email address'
+                      name='email'
+                      value={values.email || ""}
+                      onChange={handleChange}
+                    />
+                  </FormControl>
+                  <FormControl mt={4}>
+                    <FormLabel color="gray.600">Password</FormLabel>
+                    <InputGroup>
+                      <Input
+                        type={isShowPasswordActive ? 'text' : 'password'}
+                        placeholder='Enter your password'
+                        name='password'
+                        value={values.password || ""}
+                        onChange={handleChange}
+                      />
+                      <button type='button' onClick={onChangeIsShowPasswordActive}>
+                        <InputRightAddon
+                          children={isShowPasswordActive ? <ViewIcon /> : <ViewOffIcon />}
+                          cursor="pointer"
+                        />
+                      </button>
+                    </InputGroup>
+                  </FormControl>
+                  {errors.length > 0 && <Errors errors={errors} />}
+                  <Box pt={4}>
+                    <Link color="teal.500">Forgot your password?</Link>
+                  </Box>
+                  <Button
+                    type='submit'
+                    isLoading={isSubmitting}
+                    loadingText='Submitting'
+                    backgroundColor="teal"
+                    color="white"
+                    width='full'
+                    mt={4}
+                  >
+                    Register
+                  </Button>
+                </form>
+              </Box>
+            </>
+          )
+        }
       </Box>
     </Flex>
   )
