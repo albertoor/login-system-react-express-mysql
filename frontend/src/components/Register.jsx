@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   Link, Flex,
   Box, Input,
   FormControl, FormLabel,
   Button, Heading,
-  InputGroup, InputRightAddon
+  InputGroup, InputRightAddon,
 } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import useShowPassword from '../hooks/useShowPassword'
 import useForm from '../hooks/useForm'
 import axios from 'axios'
-import { useCallback } from 'react'
+import Errors from './Errors'
 
 
 const Register = () => {
@@ -22,24 +22,22 @@ const Register = () => {
   const handleRegister = useCallback(
     (e) => {
       e.preventDefault()
-      console.log(process.env.REACT_APP_REGISTER_URL)
-
       axios.post(process.env.REACT_APP_REGISTER_URL, values)
         .then((res) => {
-          console.log(res)
-          if (res.data.status === 400) {
+          if (res.data.success === false) {
             setErrors(res.data.message)
-            console.log(res.data.message)
+            console.log(res.data)
           } else {
             setErrors([])
             setSuccessMsg(res.data.message)
-            console.log(res.data.message)
           }
         }).catch((err) => {
           console.log(err)
         })
     }, [values]
   )
+
+  console.log(errors)
 
   return (
     <Flex minHeight='90vh' width='full' align='center' justifyContent='center'>
@@ -92,6 +90,7 @@ const Register = () => {
                 </button>
               </InputGroup>
             </FormControl>
+            {errors.length > 0 && <Errors errors={errors} />}
             <Box pt={4}>
               <Link color="teal.500">Forgot your password?</Link>
             </Box>
