@@ -3,23 +3,22 @@ import {
   Link, Flex,
   Box, Input,
   FormControl, FormLabel,
-  Button, Heading,
+  Button, Heading, Text,
   InputGroup, InputRightAddon,
-  Text
+  IconButton
 } from '@chakra-ui/react'
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
 import useShowPassword from '../hooks/useShowPassword'
 import useForm from '../hooks/useForm'
 import axios from 'axios'
 import Errors from './Errors'
-import { useNavigate } from 'react-router-dom'
 import AccountSuccess from './AccountSuccess'
+import { Link as LinkRouter } from 'react-router-dom'
 
 const Register = () => {
   const [isShowPasswordActive, onChangeIsShowPasswordActive] = useShowPassword()
   const [values, handleChange] = useForm()
   const [errors, setErrors] = useState([])
-  const navigate = useNavigate()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
 
@@ -43,8 +42,6 @@ const Register = () => {
         })
     }, [values, isSubmitting, success]
   )
-
-  console.log(errors)
 
   return (
     <Flex minHeight='90vh' width='full' align='center' justifyContent='center'>
@@ -92,17 +89,17 @@ const Register = () => {
                         value={values.password || ""}
                         onChange={handleChange}
                       />
-                      <button type='button' onClick={onChangeIsShowPasswordActive}>
+                      <IconButton type='button' onClick={onChangeIsShowPasswordActive}>
                         <InputRightAddon
                           children={isShowPasswordActive ? <ViewIcon /> : <ViewOffIcon />}
                           cursor="pointer"
                         />
-                      </button>
+                      </IconButton>
                     </InputGroup>
                   </FormControl>
                   {errors.length > 0 && <Errors errors={errors} />}
                   <Box pt={4}>
-                    <Link color="teal.500">Forgot your password?</Link>
+                    <Text>Already have an account <Link as={LinkRouter} to="/login" color="teal.500">LogIn</Link></Text>
                   </Box>
                   <Button
                     type='submit'
