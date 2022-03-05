@@ -105,10 +105,11 @@ const Register = () => {
                     type='submit'
                     isLoading={isSubmitting}
                     loadingText='Submitting'
-                    backgroundColor="teal"
+                    backgroundColor="teal.600"
                     color="white"
                     width='full'
                     mt={4}
+                    _hover={{ backgroundColor: "teal.400" }}
                   >
                     Register
                   </Button>

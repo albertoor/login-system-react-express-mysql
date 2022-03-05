@@ -37,6 +37,7 @@ const Login = () => {
           setUserDoesExist("")
           setWrongCredentials("")
           setIsSubmitting(!isSubmitting)
+          localStorage.setItem("token", res.data.token)
           setTimeout(() => {
             navigate("/")
           }, 2000)
@@ -99,10 +100,11 @@ const Login = () => {
               type='submit'
               isLoading={isSubmitting}
               loadingText='Checking Credentials'
-              backgroundColor="teal"
+              backgroundColor="teal.600"
               color="white"
               width='full'
               mt={4}
+              _hover={{ backgroundColor: "teal.400" }}
             >
               Login
             </Button>
