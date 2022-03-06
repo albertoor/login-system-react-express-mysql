@@ -9,20 +9,19 @@ import {
 import useForm from "../hooks/useForm"
 import useShowPassword from "../hooks/useShowPassword"
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons'
-import { Link as LinkRouter, useNavigate } from 'react-router-dom'
+import { Link as LinkRouter, useHistory } from 'react-router-dom'
 import axios from "axios"
 
 const Login = () => {
   const [isShowPasswordActive, onChangeIsShowPasswordActive] = useShowPassword()
   const [values, handleChange] = useForm()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const navigate = useNavigate()
+  const history = useHistory()
   const [userDoesNotExist, setUserDoesExist] = useState("")
   const [wrongCredentials, setWrongCredentials] = useState("")
 
   const handleLogin = useCallback((e) => {
     e.preventDefault()
-    console.log(values)
     setUserDoesExist("")
     setWrongCredentials("")
     axios.post(process.env.REACT_APP_LOGIN_URL, values)
@@ -39,16 +38,14 @@ const Login = () => {
           setIsSubmitting(!isSubmitting)
           localStorage.setItem("token", res.data.token)
           setTimeout(() => {
-            navigate("/")
+            history.push("/")
           }, 2000)
         }
 
       }).catch((error) => {
         console.log(error)
       })
-  }, [values, navigate, isSubmitting])
-
-  console.log(userDoesNotExist)
+  }, [values, history, isSubmitting])
 
   return (
     <Flex minHeight='90vh' width='full' align='center' justifyContent='center'>
