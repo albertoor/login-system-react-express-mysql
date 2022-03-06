@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react"
 import { Flex, Text, Button, Link, Heading, Box } from "@chakra-ui/react"
 import axios from "axios"
-import { Link as LinkRouter } from 'react-router-dom'
+import { Link as LinkRouter, useHistory } from 'react-router-dom'
 
 const Home = () => {
   const [auth, setAuth] = useState(false)
   const [userId, setUserId] = useState('')
   const [currEmail, setCurrEmail] = useState('')
+  const history = useHistory()
 
   // Verify token
   useEffect(() => {
@@ -40,6 +41,19 @@ const Home = () => {
       })
   })
 
+  const logout = () => {
+    axios.get(process.env.REACT_APP_LOGOUT_URL)
+      .then((res) => {
+        console.log(res)
+        if (res.status === 200) {
+          window.localStorage.removeItem('token')
+          history.push("/login")
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+  }
+
   return (
     <Flex minHeight='90vh' width='full' alignItems='center' justifyContent='center' >
       {!auth && (
@@ -55,7 +69,7 @@ const Home = () => {
             <Text>ID: {userId}</Text>
             <Text>Email: {currEmail}</Text>
           </Box>
-          <Button bg={"tomato"} color={"white"}>
+          <Button onClick={logout} bg={"tomato"} color={"white"}>
             Log out
           </Button>
         </Flex>
